@@ -47,27 +47,28 @@ namespace Ho_Zyo
                 return;
             }
 
-            if (_commands.Commands.Any(x => x.Name.ToLower() != socketUserMessage.Content.Split()[0]) && //コマンドが存在するか
-                socketUserMessage.Author.IsBot == false)                                                 //bot以外からの発言か
+            var argPos = 0;
+
+            // コマンドかどうか
+            if (socketUserMessage.HasCharPrefix(Prefix, ref argPos) == false ||
+                socketUserMessage.HasMentionPrefix(_client.CurrentUser, ref argPos))
+            {
+                return;
+            }
+
+            if (_commands.Commands.Any(x => x.Name.ToLower() == socketUserMessage.Content.Substring(1)) == false &&    // コマンドが存在するか
+                socketUserMessage.Author.IsBot == false)                                                               //そのコマンドはbot以外によるものか
             {
                 await socketUserMessage.AddReactionAsync(new Emoji("\uD83E\uDD14"));
                 return;
             }
 
-            var argPos = 0;
-            if (socketUserMessage.HasCharPrefix(Prefix, ref argPos) &&
-                socketUserMessage.Channel.Name != "bot" && //#botチャンネル以外で呼ばれたか  
+            // botチャンネルかどうか
+            if (socketUserMessage.Channel.Name != "bot" && //#botチャンネル以外で呼ばれたか  
                 socketUserMessage.Author.IsBot == false)   //そのコマンドはbot以外によるものか
             {
                 await socketUserMessage.Channel.SendMessageAsync(
                     $"{socketUserMessage.Author.Mention} #bot チャンネルで話してね？");
-                return;
-            }
-
-            argPos = 0;
-            if (socketUserMessage.HasCharPrefix(Prefix, ref argPos) == false ||
-                socketUserMessage.HasMentionPrefix(_client.CurrentUser, ref argPos))
-            {
                 return;
             }
 

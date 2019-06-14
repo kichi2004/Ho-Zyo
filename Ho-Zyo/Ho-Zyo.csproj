@@ -7,4 +7,14 @@
         <LangVersion>7.1</LangVersion>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Model" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Discord.Net" Version="2.1.1" />
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+      <PackageReference Include="RestSharp" Version="106.6.9" />
+    </ItemGroup>
+
 </Project>

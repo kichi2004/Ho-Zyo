@@ -12,15 +12,19 @@ namespace Ho_Zyo
 
         private static async Task Main(string[] args)
         {
-            StartServer();
+            var bot = new DiscordBot();
+            await bot.Start();
+            
+            var url = $"http://{Addr}:{Port}/";
+            var server = new HttpServer(url);
+            await server.Start();
+            
             await Task.Delay(-1);
         }
 
         private static async void StartServer()
         {
-            var url = $"http://{Addr}:{Port}/";
-            var server = new HttpServer(url);
-            await server.Start();
+            
         }
     }
 }

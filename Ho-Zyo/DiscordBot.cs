@@ -46,6 +46,12 @@ namespace Ho_Zyo
                 return;
             }
 
+            if (socketUserMessage.Channel.Name != "bot" && socketUserMessage.Author.IsBot == false)
+            {
+                await socketUserMessage.Channel.SendMessageAsync($"{socketUserMessage.Author.Mention} #bot チャンネルで話してね？");
+                return;
+            }
+            
             var argPos = 0;
             if (socketUserMessage.HasCharPrefix(Prefix, ref argPos) == false ||
                 socketUserMessage.HasMentionPrefix(_client.CurrentUser, ref argPos))

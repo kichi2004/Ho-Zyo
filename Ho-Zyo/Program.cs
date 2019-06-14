@@ -11,7 +11,7 @@ namespace Ho_Zyo
         private static readonly string Addr = Environment.GetEnvironmentVariable("ADDRESS");
         private static async Task Main(string[] args)
         {
-            var url = $"http://{Addr}:{Port}/";
+            var url = $"http://106.181.73.125:{Port}/";
             
             using (var listener = new HttpListener())
             {

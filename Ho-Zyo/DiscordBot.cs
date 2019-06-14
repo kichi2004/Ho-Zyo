@@ -47,7 +47,7 @@ namespace Ho_Zyo
                 return;
             }
 
-            if (_commands.Commands.Any(x => x.Name.ToLower() == socketUserMessage.Content.Split()[0]) && //コマンドが存在するか
+            if (_commands.Commands.Any(x => x.Name.ToLower() != socketUserMessage.Content.Split()[0]) && //コマンドが存在するか
                 socketUserMessage.Author.IsBot == false)                                                 //bot以外からの発言か
             {
                 await socketUserMessage.AddReactionAsync(new Emoji("\uD83E\uDD14"));

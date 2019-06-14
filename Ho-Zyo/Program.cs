@@ -8,9 +8,10 @@ namespace Ho_Zyo
     internal static class Program
     {
         private static readonly string Port = Environment.GetEnvironmentVariable("PORT");
+        private static readonly string Addr = Environment.GetEnvironmentVariable("ADDRESS");
         private static async Task Main(string[] args)
         {
-            var url = $"http://localhost:{Port}/";
+            var url = $"http://{Addr}:{Port}/";
             
             using (var listener = new HttpListener())
             {
@@ -23,7 +24,7 @@ namespace Ho_Zyo
                     using (var stream = res.OutputStream)
                     using (var writer = new StreamWriter(stream))
                     {
-                        await writer.WriteLineAsync("Ho-Zyo is Available!");
+                        writer.WriteLine("Ho-Zyo is Available!");
                     }
                 }
             }

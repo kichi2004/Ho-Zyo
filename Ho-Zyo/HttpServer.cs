@@ -7,7 +7,7 @@ namespace Ho_Zyo
 {
     public class HttpServer : IDisposable
     {
-        private HttpListener _listener;
+        private readonly HttpListener _listener;
 
         public HttpServer(string prefix)
         {

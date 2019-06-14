@@ -47,9 +47,15 @@ namespace Ho_Zyo
                 return;
             }
 
-            if (_commands.Commands.Any(x => x.Name == socketUserMessage.Content.Substring(1)) &&    //その呼び方を持つコマンドが存在するか
-                socketUserMessage.Channel.Name != "bot" &&                                          //#botチャンネルで呼ばれたか  
-                socketUserMessage.Author.IsBot == false)                                            //そのコマンドはbotによるものか
+            if (_commands.Commands.Any(x => x.Name.ToLower() == socketUserMessage.Content.Split()[0]) && //コマンドが存在するか
+                socketUserMessage.Author.IsBot == false)                                                 //bot以外からの発言か
+            {
+                await socketUserMessage.AddReactionAsync(new Emoji("\uD83E\uDD14"));
+                return;
+            }
+
+            if (socketUserMessage.Channel.Name != "bot" && //#botチャンネル以外で呼ばれたか  
+                socketUserMessage.Author.IsBot == false)   //そのコマンドはbot以外によるものか
             {
                 await socketUserMessage.Channel.SendMessageAsync(
                     $"{socketUserMessage.Author.Mention} #bot チャンネルで話してね？");
@@ -64,12 +70,7 @@ namespace Ho_Zyo
             }
 
             var context = new CommandContext(_client, socketUserMessage);
-            var result = await _commands.ExecuteAsync(context, argPos, _services);
-
-            if (result.IsSuccess == false && _client.CurrentUser.IsBot == false)
-            {
-                await socketUserMessage.AddReactionAsync(new Emoji("\uD83E\uDD14"));
-            }
+            await _commands.ExecuteAsync(context, argPos, _services);
         }
     }
 }

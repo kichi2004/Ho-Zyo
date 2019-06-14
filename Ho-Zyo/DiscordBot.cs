@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
@@ -46,12 +47,15 @@ namespace Ho_Zyo
                 return;
             }
 
-            if (socketUserMessage.Channel.Name != "bot" && socketUserMessage.Author.IsBot == false)
+            if (_commands.Commands.Any(x => x.Name == socketUserMessage.Content.Substring(1)) &&    //その呼び方を持つコマンドが存在するか
+                socketUserMessage.Channel.Name != "bot" &&                                          //#botチャンネルで呼ばれたか  
+                socketUserMessage.Author.IsBot == false)                                            //そのコマンドはbotによるものか
             {
-                await socketUserMessage.Channel.SendMessageAsync($"{socketUserMessage.Author.Mention} #bot チャンネルで話してね？");
+                await socketUserMessage.Channel.SendMessageAsync(
+                    $"{socketUserMessage.Author.Mention} #bot チャンネルで話してね？");
                 return;
             }
-            
+
             var argPos = 0;
             if (socketUserMessage.HasCharPrefix(Prefix, ref argPos) == false ||
                 socketUserMessage.HasMentionPrefix(_client.CurrentUser, ref argPos))

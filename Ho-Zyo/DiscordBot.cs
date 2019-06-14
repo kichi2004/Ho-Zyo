@@ -14,6 +14,7 @@ namespace Ho_Zyo
         private readonly DiscordSocketClient _client;
         private readonly CommandService _commands;
         private readonly IServiceProvider _services;
+        private const char Prefix = '!';
 
         public DiscordBot()
         {

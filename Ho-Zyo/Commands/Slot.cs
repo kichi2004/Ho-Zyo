@@ -68,7 +68,7 @@ namespace Ho_Zyo.Commands
         [Command("establish")]
         public async Task Establishment()
         {
-            await ReplyAsync($"{GetEstablishment():F5} ({_achievementCount}/{_callCount}");
+            await ReplyAsync($"{GetEstablishment():F5} ({_achievementCount}/{_callCount})");
         }
     }
 }

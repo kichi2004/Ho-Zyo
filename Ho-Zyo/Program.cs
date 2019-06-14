@@ -12,10 +12,15 @@ namespace Ho_Zyo
 
         private static async Task Main(string[] args)
         {
+            StartServer();
+            await Task.Delay(-1);
+        }
+
+        private static async void StartServer()
+        {
             var url = $"http://{Addr}:{Port}/";
             var server = new HttpServer(url);
-            server.Start();
-            await Task.Delay(-1);
+            await server.Start();
         }
     }
 }

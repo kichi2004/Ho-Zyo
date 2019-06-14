@@ -34,7 +34,7 @@ namespace Ho_Zyo
 
         private static Task OnSendLog(LogMessage arg)
         {
-            Console.WriteLine($"[{DateTime.Now.Millisecond}]{arg.Message}");
+            Console.WriteLine($"[{DateTime.Now}]{arg.Message}");
             return Task.CompletedTask;
         }
 

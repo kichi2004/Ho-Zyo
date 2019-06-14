@@ -46,7 +46,7 @@ namespace Ho_Zyo
             }
 
             var argPos = 0;
-            if (socketUserMessage.HasCharPrefix('!', ref argPos) == false ||
+            if (socketUserMessage.HasCharPrefix(Prefix, ref argPos) == false ||
                 socketUserMessage.HasMentionPrefix(_client.CurrentUser, ref argPos))
             {
                 return;
@@ -55,17 +55,9 @@ namespace Ho_Zyo
             var context = new CommandContext(_client, socketUserMessage);
             var result = await _commands.ExecuteAsync(context, argPos, _services);
 
-            if (result.IsSuccess == false)
+            if (result.IsSuccess == false && _client.CurrentUser.IsBot == false)
             {
-                try
-                {
-                    await socketUserMessage.AddReactionAsync(new Emoji("\uD83E\uDD14"));
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"[{DateTime.Now}]{e}");
-                    throw;
-                }
+                await socketUserMessage.AddReactionAsync(new Emoji("\uD83E\uDD14"));
             }
         }
     }

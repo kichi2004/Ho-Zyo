@@ -9,25 +9,13 @@ namespace Ho_Zyo
     {
         private static readonly string Port = Environment.GetEnvironmentVariable("PORT");
         private static readonly string Addr = Environment.GetEnvironmentVariable("ADDRESS");
+
         private static async Task Main(string[] args)
         {
             var url = $"http://{Addr}:{Port}/";
-            
-            using (var listener = new HttpListener())
-            {
-                listener.Prefixes.Add(url);
-                listener.Start();
-                while (true)
-                {
-                    var context = await listener.GetContextAsync();
-                    using (var res = context.Response)
-                    using (var stream = res.OutputStream)
-                    using (var writer = new StreamWriter(stream))
-                    {
-                        writer.WriteLine("Ho-Zyo is Available!");
-                    }
-                }
-            }
+            var server = new HttpServer(url);
+            server.Start();
+            await Task.Delay(-1);
         }
     }
 }

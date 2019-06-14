@@ -62,21 +62,13 @@ namespace Ho_Zyo.Commands
 
         private double GetEstablishment()
         {
-            return (double) _achievementCount / _callCount;
+            return _achievementCount == 0 ? 0 : (double) _achievementCount / _callCount;
         }
 
         [Command("establish")]
         public async Task Establishment()
         {
-            var establishment = (double) _achievementCount / _callCount;
-            if (_achievementCount == 0)
-            {
-                await ReplyAsync($"0% (0 / {_callCount})");
-            }
-            else
-            {
-                await ReplyAsync($"{establishment * 100:F3}% ({_achievementCount} / {_callCount})");
-            }
+            await ReplyAsync($"{GetEstablishment():F5} ({_achievementCount}/{_callCount}");
         }
     }
 }

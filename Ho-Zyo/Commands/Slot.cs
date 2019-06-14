@@ -9,8 +9,9 @@ namespace Ho_Zyo.Commands
 {
     public class Slot : ModuleBase
     {
-        private static int _callCount = 0;
-        private static int _achievementCount = 0;
+        private readonly List<Emoji> _emojis = Emoji.GetEmojis().Where(x => x.Animated == false).ToList();
+        private int _callCount = 0;
+        private int _achievementCount = 0;
 
         [Command("slot")]
         public async Task DoSlot(int num = 1)
@@ -34,7 +35,6 @@ namespace Ho_Zyo.Commands
             };
 
             var random = new Random();
-            var emojis = Emoji.GetEmojis().Where(x => x.Animated == false).ToList();
 
             for (int j = 0; j < num; j++)
             {
@@ -42,7 +42,7 @@ namespace Ho_Zyo.Commands
 
                 for (int i = 0; i < 3; i++)
                 {
-                    var emoji = emojis[random.Next(emojis.Count - 1)];
+                    var emoji = _emojis[random.Next(_emojis.Count - 1)];
                     chosen.Add(emoji.ToString());
                 }
 
@@ -56,11 +56,11 @@ namespace Ho_Zyo.Commands
                 }
             }
 
-            send.Add(GetEstablishment().ToString());
+            send.Add($"{GetEstablishment():F5} ({_achievementCount}/{_callCount})");
             await ReplyAsync(string.Join("\n", send));
         }
 
-        private static double GetEstablishment()
+        private double GetEstablishment()
         {
             return (double) _achievementCount / _callCount;
         }

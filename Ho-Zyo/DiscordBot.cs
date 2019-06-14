@@ -38,22 +38,35 @@ namespace Ho_Zyo
             return Task.CompletedTask;
         }
 
-        private async Task OnReceiveCommandAsync(SocketMessage msgParam)
+        private async Task OnReceiveCommandAsync(SocketMessage socketMessage)
         {
-            if (!(msgParam is SocketUserMessage msg))
+            if (!(socketMessage is SocketUserMessage socketUserMessage))
             {
                 return;
             }
 
             var argPos = 0;
-            if (msg.HasCharPrefix('!', ref argPos) == false ||
-                msg.HasMentionPrefix(_client.CurrentUser, ref argPos))
+            if (socketUserMessage.HasCharPrefix('!', ref argPos) == false ||
+                socketUserMessage.HasMentionPrefix(_client.CurrentUser, ref argPos))
             {
                 return;
             }
 
-            var context = new CommandContext(_client, msg);
-            await _commands.ExecuteAsync(context, argPos, _services);
+            var context = new CommandContext(_client, socketUserMessage);
+            var result = await _commands.ExecuteAsync(context, argPos, _services);
+
+            if (result.IsSuccess == false)
+            {
+                try
+                {
+                    await socketUserMessage.AddReactionAsync(new Emoji("\uD83E\uDD14"));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"[{DateTime.Now}]{e}");
+                    throw;
+                }
+            }
         }
     }
 }

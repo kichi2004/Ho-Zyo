@@ -15,7 +15,7 @@ namespace Ho_Zyo.Commands
             var sb = new StringBuilder();
             for (int i = 0; i < repeat; i++)
             {
-                sb.Append(yosano.ToMsg());
+                sb.Append(yosano.ToString());
             }
 
             await ReplyAsync(sb.ToString());

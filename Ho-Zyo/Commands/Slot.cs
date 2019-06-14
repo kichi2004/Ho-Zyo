@@ -34,7 +34,7 @@ namespace Ho_Zyo.Commands
             };
 
             var random = new Random();
-            var emojis = Emoji.GetEmojis();
+            var emojis = Emoji.GetEmojis().Where(x => x.Animated == false).ToList();
 
             for (int j = 0; j < num; j++)
             {
@@ -43,7 +43,7 @@ namespace Ho_Zyo.Commands
                 for (int i = 0; i < 3; i++)
                 {
                     var emoji = emojis[random.Next(emojis.Count - 1)];
-                    chosen.Add(emoji.ToMsg());
+                    chosen.Add(emoji.ToString());
                 }
 
                 send.Add(string.Join(' ', chosen));
@@ -65,7 +65,7 @@ namespace Ho_Zyo.Commands
             return (double) _achievementCount / _callCount;
         }
 
-        [Command("estab")]
+        [Command("establish")]
         public async Task Establishment()
         {
             var establishment = (double) _achievementCount / _callCount;

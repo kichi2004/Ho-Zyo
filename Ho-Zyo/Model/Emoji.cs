@@ -27,15 +27,15 @@ namespace Ho_Zyo.Model
         [JsonProperty("id")]
         public string Id { get; set; }
 
-        public string ToMsg()
+        public override string ToString()
         {
             return $"<:{Name}:{Id}>";
         }
 
-        public static List<Emoji> GetEmojis()
+        public static IEnumerable<Emoji> GetEmojis()
         {
             var client = new RestClient("https://discordapp.com/api");
-            var serverId = "522072012932251648";
+            const string serverId = "522072012932251648";
             var request = new RestRequest($"/guilds/{serverId}/emojis", Method.GET);
 
             var token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");

@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace Ho_Zyo
 {
-    internal class Program
+    internal static class Program
     {
-        private readonly string _port = Environment.GetEnvironmentVariable("PORT");
-        private async Task Main(string[] args)
+        private static readonly string Port = Environment.GetEnvironmentVariable("PORT");
+        private static async Task Main(string[] args)
         {
-            var url = $"http://localhost:{_port}/";
+            var url = $"http://localhost:{Port}/";
             
             using (var listener = new HttpListener())
             {

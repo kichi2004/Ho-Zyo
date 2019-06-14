@@ -4,6 +4,7 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <RootNamespace>Ho_Zyo</RootNamespace>
+        <LangVersion>7.1</LangVersion>
     </PropertyGroup>
 
 </Project>

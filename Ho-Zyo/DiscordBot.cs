@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -15,13 +16,15 @@ namespace Ho_Zyo
         private readonly DiscordSocketClient _client;
         private readonly CommandService _commands;
         private readonly IServiceProvider _services;
-        private const char Prefix = '!';
+        private const char PREFIX = '!';
+        public const string SETTINGS_PATH = "./DiscordBotSettings.json";
 
         public DiscordBot()
         {
             _client = new DiscordSocketClient();
             _commands = new CommandService();
             _services = new ServiceCollection().BuildServiceProvider();
+            InitSettingsFile();
         }
 
         public async Task Start()
@@ -32,6 +35,11 @@ namespace Ho_Zyo
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
             await _client.LoginAsync(TokenType.Bot, _token);
             await _client.StartAsync();
+        }
+
+        private static void InitSettingsFile()
+        {
+            using (var reader = new StreamReader(SETTINGS_PATH)) { }
         }
 
         private static Task OnSendLog(LogMessage arg)
@@ -50,7 +58,7 @@ namespace Ho_Zyo
             var argPos = 0;
 
             // コマンドかどうか
-            if (socketUserMessage.HasCharPrefix(Prefix, ref argPos) == false ||
+            if (socketUserMessage.HasCharPrefix(PREFIX, ref argPos) == false ||
                 socketUserMessage.HasMentionPrefix(_client.CurrentUser, ref argPos))
             {
                 return;

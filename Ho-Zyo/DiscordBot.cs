@@ -39,7 +39,11 @@ namespace Ho_Zyo
 
         private static void InitSettingsFile()
         {
-            using (var reader = new StreamReader(SETTINGS_PATH)) { }
+            if (File.Exists(SETTINGS_PATH)) return;
+            using (var writer = new StreamWriter(SETTINGS_PATH))
+            {
+                writer.Write(new Settings().ToJson());
+            }
         }
 
         private static Task OnSendLog(LogMessage arg)

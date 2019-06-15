@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Commands;
@@ -10,9 +11,32 @@ namespace Ho_Zyo.Commands
     public class Slot : ModuleBase
     {
         private readonly List<Emoji> _emojis = Emoji.GetEmojis().Where(x => x.Animated == false).ToList();
-        private static int _callCount;
-        private static int _achievementCount;
+        private int _callCount;
+        private int _achievementCount;
         private readonly Random _random = new Random();
+
+        protected override void BeforeExecute(CommandInfo command)
+        {
+            using (var reader = new StreamReader(DiscordBot.SETTINGS_PATH))
+            {
+                var settings = Settings.FromJson(reader.ReadToEnd());
+                _callCount = settings.SlotCallCount;
+                _achievementCount = settings.SlotAchievementCount;
+            }
+        }
+
+        protected override void AfterExecute(CommandInfo command)
+        {
+            var settings = new Settings()
+            {
+                SlotAchievementCount = _achievementCount,
+                SlotCallCount = _callCount
+            };
+            using (var writer = new StreamWriter(DiscordBot.SETTINGS_PATH))
+            {
+                writer.Write(settings.ToJson());
+            }
+        }
 
         [Command("slot")]
         public async Task DoSlot(int num = 1)

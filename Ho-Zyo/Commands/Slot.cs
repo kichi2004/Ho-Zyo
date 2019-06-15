@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Commands;
@@ -11,32 +10,8 @@ namespace Ho_Zyo.Commands
     public class Slot : ModuleBase
     {
         private readonly List<Emoji> _emojis = Emoji.GetEmojis().Where(x => x.Animated == false).ToList();
-        private int _callCount;
-        private int _achievementCount;
         private readonly Random _random = new Random();
 
-        protected override void BeforeExecute(CommandInfo command)
-        {
-            using (var reader = new StreamReader(DiscordBot.SETTINGS_PATH))
-            {
-                var settings = Settings.FromJson(reader.ReadToEnd());
-                _callCount = settings.SlotCallCount;
-                _achievementCount = settings.SlotAchievementCount;
-            }
-        }
-
-        protected override void AfterExecute(CommandInfo command)
-        {
-            var settings = new Settings()
-            {
-                SlotAchievementCount = _achievementCount,
-                SlotCallCount = _callCount
-            };
-            using (var writer = new StreamWriter(DiscordBot.SETTINGS_PATH))
-            {
-                writer.Write(settings.ToJson());
-            }
-        }
 
         [Command("slot")]
         public async Task DoSlot(int num = 1)
@@ -73,11 +48,11 @@ namespace Ho_Zyo.Commands
                 }
 
                 send.Add(string.Join(' ', chosen));
-                _callCount++;
+                DiscordBot.CallCount++;
 
                 if (chosen.Any(x => x != chosen.First())) continue;
                 send.Add($"おめでとうございます! {chosen.First()}");
-                _achievementCount++;
+                DiscordBot.AchievementCount++;
             }
 
             send.Add(GetEstablishment());
@@ -86,8 +61,10 @@ namespace Ho_Zyo.Commands
 
         private string GetEstablishment()
         {
-            var establish = _achievementCount == 0 ? 0 : (double) _achievementCount / _callCount;
-            return $"{establish * 100:F2} ({_achievementCount}/{_callCount})";
+            int achievementCount = DiscordBot.AchievementCount,
+                callCount = DiscordBot.CallCount;
+            var establish = achievementCount == 0 ? 0 : 100.0 * achievementCount / callCount;
+            return $"{establish:F2} ({achievementCount}/{callCount})";
         }
 
         [Command("establish")]

@@ -18,13 +18,23 @@ namespace Ho_Zyo
         private readonly IServiceProvider _services;
         private const char PREFIX = '!';
         public const string SETTINGS_PATH = "./DiscordBotSettings.json";
+        private static (int callCount, int achievementCount) Counts
+        {
+            set
+            {
+                CallCount = value.callCount;
+                AchievementCount = value.achievementCount;
+            }
+        }
+        public static int CallCount { get; set; }
+        public static int AchievementCount { get; set; }
 
         public DiscordBot()
         {
             _client = new DiscordSocketClient();
             _commands = new CommandService();
             _services = new ServiceCollection().BuildServiceProvider();
-            InitSettingsFile();
+            LoadSettings();
         }
 
         public async Task Start()
@@ -35,15 +45,6 @@ namespace Ho_Zyo
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
             await _client.LoginAsync(TokenType.Bot, _token);
             await _client.StartAsync();
-        }
-
-        private static void InitSettingsFile()
-        {
-            if (File.Exists(SETTINGS_PATH)) return;
-            using (var writer = new StreamWriter(SETTINGS_PATH))
-            {
-                writer.Write(new Settings().ToJson());
-            }
         }
 
         private static Task OnSendLog(LogMessage arg)
@@ -88,6 +89,21 @@ namespace Ho_Zyo
 
             var context = new CommandContext(_client, socketUserMessage);
             await _commands.ExecuteAsync(context, argPos, _services);
+        }
+
+        internal static void LoadSettings()
+        {
+            using (var reader = new StreamReader(SETTINGS_PATH))
+            {
+                var data = Settings.FromJson(reader.ReadToEnd());
+                Counts = (data.SlotCallCount, data.SlotAchievementCount);
+            }
+        }
+
+        internal static void SaveSettings()
+        {
+            using (var writer = new StreamWriter(SETTINGS_PATH))
+                writer.Write(new Settings(CallCount, AchievementCount).ToJson());
         }
     }
 }

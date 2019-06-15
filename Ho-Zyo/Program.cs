@@ -13,13 +13,18 @@ namespace Ho_Zyo
             var bot = new DiscordBot();
             await bot.Start();
 
-        #if RELEASE
+#if RELEASE
             var url = $"http://{Addr}:{Port}/";
             var server = new HttpServer(url);
             await server.Start();
-        #endif
-
-            await Task.Delay(-1);
+#endif
+            while (true)
+            {
+                var command = Console.ReadLine();
+                if (command != "save" && command != "exit") continue;
+                DiscordBot.SaveSettings();
+                if (command == "exit") break;
+            }
         }
     }
 }
